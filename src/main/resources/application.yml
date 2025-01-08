@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb2?useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Amgfaa289!@
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    com.example: debug
+
+jwt:
+  secret: 7a79eb6c71b322e5ea86488133d76ddb3f7e36db819f608b91c55f3c571bb2ce544bf3e3ae73e3d699067bc7970c1af989f05ebd7d47a516d8ab968ed454b789
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  packages-to-scan: com.example.jwt.domain.controller
