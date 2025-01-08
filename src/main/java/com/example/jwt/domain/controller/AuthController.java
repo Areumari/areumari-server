@@ -1,9 +1,6 @@
 package com.example.jwt.domain.controller;
 
-import com.example.jwt.domain.dto.LoginRequestDto;
-import com.example.jwt.domain.dto.SignupRequestDto;
-import com.example.jwt.domain.dto.TokenDto;
-import com.example.jwt.domain.dto.TokenRequestDto;
+import com.example.jwt.domain.dto.*;
 import com.example.jwt.domain.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +14,18 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequestDto requestDto) {
         authService.signup(requestDto);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginRequestDto requestDto) {
+    @PostMapping("/signIn")
+    public ResponseEntity<LoginResponseDto> signIn(@Valid @RequestBody LoginRequestDto requestDto) {
         TokenDto jwtResponseDto = authService.login(requestDto);
-        return ResponseEntity.ok(jwtResponseDto);
+        String welcomeMessage = "환영합니다, " + requestDto.getName() + "님!";
+        LoginResponseDto responseDto = new LoginResponseDto(jwtResponseDto, welcomeMessage);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/reissue")
