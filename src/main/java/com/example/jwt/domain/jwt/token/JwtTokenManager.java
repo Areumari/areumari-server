@@ -1,6 +1,7 @@
 package com.example.jwt.domain.jwt.token;
 
 import com.example.jwt.domain.jwt.constants.TokenConstants;
+import com.example.jwt.domain.jwt.exception.TokenValidationException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +31,6 @@ public class JwtTokenManager implements TokenGenerator, TokenValidator {
                 .compact();
     }
 
-    @Override
     public Claims parseToken(String token) {
         try {
             return Jwts.parserBuilder()
@@ -40,7 +40,10 @@ public class JwtTokenManager implements TokenGenerator, TokenValidator {
                     .getBody();
         } catch (ExpiredJwtException e) {
             log.warn("Token has expired", e);
-            return e.getClaims();
+            throw new TokenValidationException("토큰이 만료되었습니다.");
+        } catch (Exception e) {
+            log.error("Invalid token", e);
+            throw new TokenValidationException("유효하지 않은 토큰입니다.");
         }
     }
 
