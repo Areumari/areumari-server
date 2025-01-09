@@ -67,8 +67,12 @@ public class AuthService {
 
     @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
-        if (!tokenService.validateToken(tokenRequestDto.getRefreshToken())) {
-            throw new TokenValidationException("유효하지 않은 Refresh Token입니다.");
+        try {
+            if (!tokenService.validateToken(tokenRequestDto.getRefreshToken())) {
+                throw new TokenValidationException("유효하지 않은 Refresh Token입니다.");
+            }
+        } catch (TokenValidationException e) {
+            throw new TokenValidationException("Refresh Token이 만료되었거나 유효하지 않습니다. 토큰을 확인하세요.");
         }
 
         Authentication authentication = tokenService.getAuthentication(tokenRequestDto.getAccessToken());
