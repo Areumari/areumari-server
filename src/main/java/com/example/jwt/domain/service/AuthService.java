@@ -11,6 +11,8 @@ import com.example.jwt.domain.dto.TokenDto;
 import com.example.jwt.domain.dto.TokenRequestDto;
 import com.example.jwt.domain.jwt.exception.TokenValidationException;
 import com.example.jwt.domain.jwt.service.TokenService;
+import com.example.jwt.email.service.VerificationCodeService;
+import com.example.jwt.email.service.VerificationStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,19 +29,28 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final VerificationCodeService verificationCodeService;
+    private final VerificationStatusService verificationStatusService;
+
+
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
+        if (!verificationStatusService.isEmailVerified(requestDto.getEmail())) {
+            throw new IllegalArgumentException("이메일 인증이 완료되지 않았습니다.");
+        }
+
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         }
 
+
         Member member = Member.builder()
+                .name(requestDto.getName())
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
-                .name(requestDto.getName())
                 .s_number(requestDto.getS_number())
-                .authority(Authority.ROLE_USER)
+                .authority(requestDto.getAuthority())
                 .build();
 
         memberRepository.save(member);
