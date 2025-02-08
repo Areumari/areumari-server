@@ -2,7 +2,6 @@ package com.example.jwt.domain.service;
 
 import com.example.jwt.application.dao.MemberRepository;
 import com.example.jwt.application.dao.RefreshTokenRepository;
-import com.example.jwt.domain.domain.Authority;
 import com.example.jwt.domain.domain.Member;
 import com.example.jwt.domain.domain.RefreshToken;
 import com.example.jwt.domain.dto.LoginRequestDto;
@@ -11,7 +10,7 @@ import com.example.jwt.domain.dto.TokenDto;
 import com.example.jwt.domain.dto.TokenRequestDto;
 import com.example.jwt.domain.jwt.exception.TokenValidationException;
 import com.example.jwt.domain.jwt.service.TokenService;
-import com.example.jwt.email.service.VerificationCodeService;
+import com.example.jwt.email.service.EmailService;
 import com.example.jwt.email.service.VerificationStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,27 +28,19 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final VerificationCodeService verificationCodeService;
+    private final EmailService emailService;
     private final VerificationStatusService verificationStatusService;
-
-
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
-        if (!verificationStatusService.isEmailVerified(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이메일 인증이 완료되지 않았습니다.");
+        if (memberRepository.existsBySnumber(requestDto.getSnumber())) {
+            throw new IllegalArgumentException("이미 가입된 학번입니다.");
         }
-
-        if (memberRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
-        }
-
 
         Member member = Member.builder()
                 .name(requestDto.getName())
-                .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
-                .s_number(requestDto.getS_number())
+                .snumber(requestDto.getSnumber())
                 .authority(requestDto.getAuthority())
                 .build();
 
@@ -57,16 +48,21 @@ public class AuthService {
     }
 
     @Transactional
+    public void sendVerificationEmail(String email) {
+        emailService.sendVerificationEmail(email);
+    }
+
+    @Transactional
     public TokenDto login(LoginRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
+                new UsernamePasswordAuthenticationToken(requestDto.getSnumber(), requestDto.getPassword());
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         TokenDto tokenDto = tokenService.createTokenDto(authentication);
 
-        RefreshToken refreshToken = refreshTokenRepository.findByEmail(authentication.getName())
+        RefreshToken refreshToken = refreshTokenRepository.findBySnumber(authentication.getName())
                 .orElseGet(() -> RefreshToken.builder()
-                        .email(authentication.getName())
+                        .snumber(authentication.getName())
                         .tokenValue(tokenDto.getRefreshToken())
                         .build());
 
@@ -88,7 +84,7 @@ public class AuthService {
 
         Authentication authentication = tokenService.getAuthentication(tokenRequestDto.getAccessToken());
 
-        RefreshToken refreshToken = refreshTokenRepository.findByEmail(authentication.getName())
+        RefreshToken refreshToken = refreshTokenRepository.findBySnumber(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("로그아웃된 사용자입니다."));
 
         if (!refreshToken.getTokenValue().equals(tokenRequestDto.getRefreshToken())) {
