@@ -42,3 +42,4 @@ springdoc:
     path: /swagger-ui.html
     enabled: true
   packages-to-scan: com.example.jwt.domain.controller
+
