@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/testdb2?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://database-2.c186ei0q4wh2.ap-northeast-2.rds.amazonaws.com:3306/AwsServer?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: Amgfaa289!@
+    username: admin
+    password: Amgfaa289
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -41,5 +41,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-  packages-to-scan: com.example.jwt.domain.controller
+  packages-to-scan: com.example.jwt.domain.controller, com.example.jwt.feed.controller, com.example.jwt.mypage.controller
+
 
