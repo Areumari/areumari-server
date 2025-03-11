@@ -1,15 +1,28 @@
 package com.example.jwt.search.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
 import com.example.jwt.search.enums.SearchType;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
 public class SearchCriteria {
     private SearchType searchType;
 
-    @NotBlank(message = "Search keyword cannot be empty")
-    @Size(min = 2, max = 50, message = "Search keyword must be between 2 and 50 characters")
+    @NotBlank
     private String keyword;
+
+    // Getters and setters
+    public SearchType getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 }
