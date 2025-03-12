@@ -3,8 +3,8 @@ package com.example.jwt.search.service;
 import com.example.jwt.search.dto.PostDTO;
 import com.example.jwt.search.entity.Post;
 import com.example.jwt.search.enums.SearchType;
-import com.example.jwt.application.dao.PostRepository;
 import com.example.jwt.search.exception.PostNotFoundException;
+import com.example.jwt.application.dao.PostRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,35 @@ public class PostService {
         validateSearchCriteria(searchType, keyword);
 
         List<Post> posts = switch (searchType) {
-            case TITLE -> postRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtDesc(keyword)
-                    .orElseThrow(() -> new PostNotFoundException("No posts found with title: " + keyword));
-            case CATEGORY -> postRepository.findByCategoryContainingIgnoreCaseOrderByCreatedAtDesc(keyword)
-                    .orElseThrow(() -> new PostNotFoundException("No posts found in category: " + keyword));
-            case BOTH -> postRepository.searchByTitleOrCategory(keyword)
-                    .orElseThrow(() -> new PostNotFoundException("No posts found matching: " + keyword));
+            case TITLE -> {
+                List<Post> result = postRepository.searchByTitleOrCategory(keyword); // 제목 검색
+                if (result.isEmpty()) {
+                    throw new PostNotFoundException("No posts found matching title: " + keyword);
+                }
+                yield result;
+            }
+            case CATEGORY -> {
+                List<Post> result = postRepository.searchByTitleOrCategory(keyword); // 카테고리 검색
+                if (result.isEmpty()) {
+                    throw new PostNotFoundException("No posts found matching category: " + keyword);
+                }
+                yield result;
+            }
+            case BOTH -> {
+                List<Post> result = postRepository.searchByTitleOrCategory(keyword); // 제목 + 카테고리 검색
+                if (result.isEmpty()) {
+                    throw new PostNotFoundException("No posts found matching both title and category: " + keyword);
+                }
+                yield result;
+            }
+            case FULLTEXT -> {
+                List<Post> result = postRepository.searchByTitleOrCategory(keyword); // Full-Text 검색
+                if (result.isEmpty()) {
+                    throw new PostNotFoundException("No posts found matching full-text: " + keyword);
+                }
+                yield result;
+            }
+            default -> throw new IllegalArgumentException("Unsupported search type: " + searchType);
         };
 
         return posts.stream()
@@ -58,5 +81,4 @@ public class PostService {
     private PostDTO convertToDTO(Post post) {
         return modelMapper.map(post, PostDTO.class);
     }
-
 }
