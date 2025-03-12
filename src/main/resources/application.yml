@@ -43,4 +43,3 @@ springdoc:
     enabled: true
   packages-to-scan: com.example.jwt.domain.controller, com.example.jwt.feed.controller, com.example.jwt.mypage.controller, com.example.jwt.search.controller
 
-
