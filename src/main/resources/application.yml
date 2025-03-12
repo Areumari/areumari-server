@@ -24,9 +24,8 @@ spring:
     cache:
       type: redis
     redis:
-      host: localhost  # Redis ???
-      port: 6379      # Redis ??
-
+      host: 172.31.32.196
+      port: 6379
 logging:
   level:
     org.hibernate.SQL: debug
@@ -41,6 +40,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-  packages-to-scan: com.example.jwt.domain.controller, com.example.jwt.feed.controller, com.example.jwt.mypage.controller
+  packages-to-scan: com.example.jwt.domain.controller, com.example.jwt.feed.controller, com.example.jwt.mypage.controller, com.example.jwt.search.controller
 
 
