@@ -3,11 +3,11 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/spring-github-action
+    destination: /home/ubuntu/areumari-server
     overwrite: yes
 
 permissions:
-  - object: /home/ubuntu/spring-github-action
+  - object: /home/ubuntu/areumari-server
     owner: ubuntu
     group: ubuntu
     mode: 755
