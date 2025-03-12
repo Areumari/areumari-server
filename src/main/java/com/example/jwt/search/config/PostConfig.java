@@ -18,7 +18,6 @@ public class PostConfig {
         return new ModelMapper();
     }
 
-
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
