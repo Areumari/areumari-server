@@ -3,11 +3,11 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/areumari-server
+    destination: /home/ubuntu/areumari-server2
     overwrite: yes
 
 permissions:
-  - object: /home/ubuntu/areumari-server
+  - object: /home/ubuntu/areumari-server2
     owner: ubuntu
     group: ubuntu
     mode: 755
