@@ -4,20 +4,17 @@ import com.example.jwt.search.enums.SearchType;
 import jakarta.validation.constraints.NotBlank;
 
 public class SearchCriteria {
-
-    @NotBlank
-    private String searchType;
+    private SearchType searchType;
 
     @NotBlank
     private String keyword;
 
-    // Getter와 Setter
-
+    // Getters and setters
     public SearchType getSearchType() {
-        return SearchType.valueOf(searchType.toUpperCase());
+        return searchType;
     }
 
-    public void setSearchType(String searchType) {
+    public void setSearchType(SearchType searchType) {
         this.searchType = searchType;
     }
 
