@@ -48,7 +48,7 @@ jobs:
 
       - name: EC2에 배포
         run: aws deploy create-deployment \
-          --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} \
+          --application-name Areumari-CICD \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name ${{ env.AWS_CODE_DEPLOY_GROUP }} \
           --s3-location "bucket=${{ env.AWS_S3_BUCKET }},key=cicdtest/${{ github.sha }}.zip,bundleType=zip"
