@@ -40,13 +40,6 @@ jobs:
           aws-access-key-id: ${{ secrets.CICD_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.CICD_SECRET_KEY }}
 
-      - name: 환경 변수 확인
-        run: |
-          echo "AWS_CODE_DEPLOY_APPLICATION: ${{ env.AWS_CODE_DEPLOY_APPLICATION }}"
-          echo "AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}"
-          echo "AWS_REGION: ${{ env.AWS_REGION }}"
-          echo "GITHUB_SHA: ${{ github.sha }}"
-
       - name: ZIP 파일 생성
         run: zip -r release.zip . -x "*.git*"
 
@@ -54,8 +47,10 @@ jobs:
         run: aws s3 cp release.zip s3://${{ env.AWS_S3_BUCKET }}/cicdtest/${{ github.sha }}.zip
 
       - name: EC2에 배포
-        run: aws deploy create-deployment \
-          --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ env.AWS_CODE_DEPLOY_GROUP }} \
-          --s3-location "bucket=${{ env.AWS_S3_BUCKET }},key=cicdtest/${{ github.sha }}.zip,bundleType=zip"
+        run: |
+          echo "Deploying application to EC2..."
+          aws deploy create-deployment \
+            --application-name "${{ env.AWS_CODE_DEPLOY_APPLICATION }}" \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name "${{ env.AWS_CODE_DEPLOY_GROUP }}" \
+            --s3-location "bucket=${{ env.AWS_S3_BUCKET }},key=cicdtest/${{ github.sha }}.zip,bundleType=zip"
