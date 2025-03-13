@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_PATH="/home/ubuntu/areumari-server"
+ROOT_PATH="/home/ubuntu/areumari-server2"
 JAR="$ROOT_PATH/application.jar"
 
 APP_LOG="$ROOT_PATH/application.log"
@@ -10,7 +10,7 @@ START_LOG="$ROOT_PATH/start.log"
 NOW=$(date +%c)
 
 echo "[$NOW] 실행 가능한 JAR 찾기" >> $START_LOG
-JAR_FILE=$(ls -t $ROOT_PATH/build/libs/*.jar | head -n 1)
+JAR_FILE=$(find $ROOT_PATH/build/libs -name "*.jar" | sort | tail -n 1)
 
 if [ -z "$JAR_FILE" ]; then
   echo "[$NOW] 실행할 JAR 파일이 없습니다." >> $START_LOG
