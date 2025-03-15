@@ -9,8 +9,8 @@ RUN mkdir -p /areumari
 
 WORKDIR /areumari
 
-# JAR 파일을 컨테이너에 복사
-COPY target/*.jar app.jar
+# JAR 파일을 컨테이너에 복사 - 경로를 수정하세요
+COPY build/libs/*.jar app.jar
 
 # 포트 노출 (SpringBoot 기본 포트)
 EXPOSE 8080
