@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: deploy/docker/server.Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://database-2.c186ei0q4wh2.ap-northeast-2.rds.amazonaws.com:3306/AwsServer?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: 'Amgfaa289'
+      REDIS_HOST: '172.31.32.196'
+      REDIS_PORT: '6379'
+      TZ: 'Asia/Seoul'
+    ports:
+      - "8080:8080"
+    networks:
+      default:
+        aliases:
+          - app
