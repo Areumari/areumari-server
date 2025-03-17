@@ -31,8 +31,6 @@ jobs:
           aws-access-key-id: ${{ secrets.CICD_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.CICD_SECRET_KEY }}
           aws-region: ap-northeast-2
-          role-to-assume: arn:aws:iam::050752629323:role/MyS3AccessRole
-          role-duration-seconds: 1200
 
       - name: Create deployment package
         run: |
