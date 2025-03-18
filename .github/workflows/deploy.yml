@@ -39,6 +39,7 @@ jobs:
           cp -r scripts deployment/
           cp appspec.yml deployment/
           cp Dockerfile deployment/
+          cp docker-compose.yml deployment/
           cd deployment && zip -r ../deployment.zip *
 
       - name: Upload to S3
