@@ -1,28 +1,30 @@
 version: 0.0
 os: linux
-
 files:
   - source: /
-    destination: /home/ubuntu/areumari-server2
+    destination: /home/ubuntu/areumari-server
     overwrite: yes
 
 permissions:
-  - object: /home/ubuntu/areumari-server2
+  - object: /home/ubuntu/areumari-server
+    pattern: "**"
     owner: ubuntu
     group: ubuntu
     mode: 755
 
 hooks:
-  BeforeInstall:
+  ApplicationStop:
     - location: scripts/stop.sh
       timeout: 60
       runas: ubuntu
-
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 60
+      runas: ubuntu
   AfterInstall:
     - location: scripts/after_install.sh
       timeout: 60
       runas: ubuntu
-
   ApplicationStart:
     - location: scripts/start.sh
       timeout: 60
