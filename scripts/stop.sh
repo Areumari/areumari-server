@@ -1,22 +1,11 @@
 #!/bin/bash
+cd /home/ubuntu/areumari-server || exit
 
-ROOT_PATH="/home/ubuntu/areumari-server"
-JAR="$ROOT_PATH/application.jar"
-STOP_LOG="$ROOT_PATH/stop.log"
+# 기존 Docker 컨테이너 중지 및 삭제
+sudo docker stop areumari-container || true
+sudo docker rm areumari-container || true
 
-SERVICE_PID=$(pgrep -f $JAR) # 실행 중인 Spring 서버의 PID 찾기
+# 사용하지 않는 이미지 정리 (선택사항)
+sudo docker image prune -f
 
-if [ -z "$SERVICE_PID" ]; then
-  echo "$(date +%c) : 서비스 Not Found" >> $STOP_LOG
-else
-  echo "$(date +%c) : 서비스 종료 (PID: $SERVICE_PID)" >> $STOP_LOG
-  kill "$SERVICE_PID"
-  sleep 5
-
-  # 프로세스가 종료되지 않으면 강제 종료
-  SERVICE_PID=$(pgrep -f $JAR)
-  if [ -n "$SERVICE_PID" ]; then
-    echo "$(date +%c) : 강제 종료 (PID: $SERVICE_PID)" >> $STOP_LOG
-    kill -9 "$SERVICE_PID"
-  fi
-fi
+exit 0
