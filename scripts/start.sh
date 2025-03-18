@@ -1,27 +1,17 @@
 #!/bin/bash
+cd /home/ubuntu/areumari-server || exit
 
-ROOT_PATH="/home/ubuntu/areumari-server2"
-JAR="$ROOT_PATH/application.jar"
+# Docker 컨테이너 실행
+sudo docker run -d --name areumari-container \
+  -p 80:8080 \
+  --env-file .env \
+  --restart always \
+  areumari-server
 
-APP_LOG="$ROOT_PATH/application.log"
-ERROR_LOG="$ROOT_PATH/error.log"
-START_LOG="$ROOT_PATH/start.log"
+# 상태 확인
+sudo docker ps | grep areumari-container
 
-NOW=$(date +%c)
+# 로그 출력 시작
+echo "Application started at $(date)" >> /home/ubuntu/logs/deploy.log
 
-echo "[$NOW] 실행 가능한 JAR 찾기" >> $START_LOG
-JAR_FILE=$(find $ROOT_PATH/build/libs -name "*.jar" | sort | tail -n 1)
-
-if [ -z "$JAR_FILE" ]; then
-  echo "[$NOW] 실행할 JAR 파일이 없습니다." >> $START_LOG
-  exit 1
-fi
-
-echo "[$NOW] $JAR_FILE 복사 -> $JAR" >> $START_LOG
-cp "$JAR_FILE" "$JAR"
-
-echo "[$NOW] > $JAR 실행" >> $START_LOG
-nohup java -jar $JAR > $APP_LOG 2> $ERROR_LOG &
-
-SERVICE_PID=$(pgrep -f $JAR)
-echo "[$NOW] > 서비스 PID: $SERVICE_PID" >> $START_LOG
+exit 0
