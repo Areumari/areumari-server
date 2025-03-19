@@ -1,17 +1,11 @@
 #!/bin/bash
-cd /home/ubuntu/areumari-server || exit
 
-# Docker 컨테이너 실행
-sudo docker run -d --name areumari-container \
-  -p 80:8080 \
-  --env-file .env \
-  --restart always \
-  areumari-server
+# 애플리케이션 디렉토리로 이동
+cd /home/ubuntu/jwt
 
-# 상태 확인
-sudo docker ps | grep areumari-container
+# Docker 컨테이너 빌드 및 실행
+docker-compose build
+docker-compose up -d
 
-# 로그 출력 시작
-echo "Application started at $(date)" >> /home/ubuntu/logs/deploy.log
-
-exit 0
+# 실행 상태 확인
+docker-compose ps
