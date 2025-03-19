@@ -3,7 +3,6 @@
 # 애플리케이션 디렉토리로 이동
 cd /home/ubuntu/jwt
 
-# 스크립트 파일에 실행 권한 부여
 sudo chmod +x /home/ubuntu/jwt/scripts/*.sh
 
 # 환경 변수 파일 생성
