@@ -1,14 +1,12 @@
-# Use a base image with Java
-FROM openjdk:17-jdk-slim
-
-# Set working directory
+# 빌드 스테이지
+FROM gradle:7.6.1-jdk17 as build
 WORKDIR /app
+COPY . .
+RUN gradle build --no-daemon -x test
 
-# Copy the JAR file into the container
-COPY target/jwt-app.jar /app/jwt-app.jar
-
-# Expose port 8080
+# 실행 스테이지
+FROM openjdk:17-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app/jwt-app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

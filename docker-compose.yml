@@ -1,19 +1,7 @@
 version: '3'
-
 services:
   jwt-app:
     build: .
-    container_name: jwt-app
     ports:
       - "8080:8080"
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
     restart: always
-    volumes:
-      - /home/ubuntu/jwt/logs:/app/logs
-    env_file:
-      - .env  # 환경 변수를 외부 파일에서 읽어오기 위한 설정
