@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "회원 ㅗㅗㅗ인증 API") // Swagger Tag 설정
+@Tag(name = "Authentication", description = "회원 인증 API") // Swagger Tag 설정
 public class AuthController {
 
     private final AuthService authService;
